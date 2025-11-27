@@ -1,59 +1,185 @@
-# QuizFrontend
+# QuizMaster - Angular Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.1.
+A modern, feature-rich quiz application built with Angular 18+ and TypeScript.
 
-## Development server
+## 🚀 Features
 
-To start a local development server, run:
+- **User Authentication**: JWT-based authentication with login/register
+- **Role-Based Access**: Separate roles for Users and Admins
+- **Quiz Management**: 
+  - Browse available quizzes
+  - Take quizzes with interactive UI
+  - View detailed results with question-by-question breakdown
+  - Track attempt history
+  - View leaderboards
+- **Admin Features**:
+  - Create new quizzes
+  - Edit existing quizzes
+  - Delete quizzes
+  - Manage questions and options
+- **Responsive Design**: Works on desktop, tablet, and mobile devices
+- **Modern UI**: Clean, gradient-based design with smooth animations
 
+## 📋 Prerequisites
+
+- Node.js 18+ and npm
+- Angular CLI 18+
+- Backend API running on http://localhost:8080
+
+## 🛠️ Installation
+
+1. Clone the repository:
+```bash
+git clone <your-repo-url>
+cd quiz-frontend
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Configure environment:
+Update `src/environments/environment.ts` with your API URL:
+```typescript
+export const environment = {
+  production: false,
+  apiUrl: 'http://localhost:8080/api'
+};
+```
+
+4. Start the development server:
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+5. Open http://localhost:4200 in your browser
 
-## Code scaffolding
+## 📁 Project Structure
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+```
+src/
+├── app/
+│   ├── core/                 # Core services, guards, interceptors
+│   │   ├── guards/          # Route guards (auth, admin)
+│   │   ├── interceptors/    # HTTP interceptors
+│   │   └── services/        # API services
+│   ├── shared/              # Shared components and models
+│   │   ├── components/      # Reusable components
+│   │   └── models/          # TypeScript interfaces
+│   ├── features/            # Feature modules
+│   │   ├── auth/           # Authentication
+│   │   ├── quiz/           # Quiz features
+│   │   ├── admin/          # Admin features
+│   │   └── profile/        # User profile
+│   ├── app.component.ts    # Root component
+│   ├── app.routes.ts       # Application routes
+│   └── app.config.ts       # App configuration
+├── environments/            # Environment configs
+└── styles.scss             # Global styles
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## 🎯 Key Technologies
 
-```bash
-ng generate --help
-```
+- **Angular 18+**: Latest Angular framework
+- **RxJS**: Reactive programming
+- **TypeScript**: Type-safe development
+- **JWT**: Secure authentication
+- **ngx-toastr**: Toast notifications
+- **Standalone Components**: Modern Angular architecture
 
-## Building
+## 🔐 Authentication Flow
 
-To build the project run:
+1. User registers/logs in
+2. Backend returns JWT token
+3. Token stored in localStorage
+4. AuthInterceptor adds token to all API requests
+5. Route guards protect authenticated routes
 
-```bash
-ng build
-```
+## 🎨 UI Components
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+- **Login/Register**: User authentication forms
+- **Quiz List**: Browse all available quizzes
+- **Quiz Take**: Interactive quiz interface with progress tracking
+- **Quiz Result**: Detailed results with grade and breakdown
+- **Admin Panel**: Create/edit quizzes with dynamic form arrays
+- **Navbar**: Responsive navigation with user menu
+- **Attempt History**: View past quiz attempts
+- **Leaderboard**: Compare scores with other users
 
-## Running unit tests
+## 🚦 API Integration
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+All API calls go through services:
+- `AuthService`: Authentication endpoints
+- `QuizService`: Quiz CRUD operations
+- `QuizAttemptService`: Quiz submission and history
 
+Error handling is centralized in `ErrorInterceptor`.
+
+## 🎨 Styling
+
+- Custom SCSS with gradient themes
+- Responsive design (mobile-first)
+- Smooth animations and transitions
+- Modern card-based layout
+
+## 🧪 Testing
+
+Run unit tests:
 ```bash
 ng test
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
+Run e2e tests:
 ```bash
 ng e2e
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## 📦 Build
 
-## Additional Resources
+Build for production:
+```bash
+ng build --configuration production
+```
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Output will be in `dist/` directory.
+
+## 🔧 Configuration
+
+### Environment Variables
+- `environment.ts`: Development config
+- `environment.prod.ts`: Production config
+
+### JWT Secret
+Ensure the backend JWT secret matches the one in `application.properties`.
+
+## 🐛 Troubleshooting
+
+**CORS Issues**: Ensure backend has CORS configured for http://localhost:4200
+
+**Token Expiration**: Tokens expire after 24 hours (configurable in backend)
+
+**Route Access**: Check user role matches route requirements (User/Admin)
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit changes
+4. Push to branch
+5. Create Pull Request
+
+## 📄 License
+
+MIT License
+
+## 👥 Authors
+
+Nandhakumar Nagaraj - Initial work
+
+## 🙏 Acknowledgments
+
+- Angular Team
+- Spring Boot Team
+- ngx-toastr contributors
+*/
