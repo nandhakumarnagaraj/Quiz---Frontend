@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { QuizService } from '../../../core/services/quiz.service';
 
 @Component({
   selector: 'app-navbar',
@@ -16,7 +17,7 @@ import { AuthService } from '../../../core/services/auth.service';
         </div>
 
         <div class="nav-menu">
-          <a routerLink="/quizzes" routerLinkActive="active" class="nav-link">
+          <a routerLink="/quizzes/names" routerLinkActive="active" class="nav-link">
             Quizzes
           </a>
           
@@ -250,6 +251,7 @@ import { AuthService } from '../../../core/services/auth.service';
 })
 export class NavbarComponent implements OnInit {
   private authService = inject(AuthService);
+  private quizservice = inject(QuizService);
 
   isAuthenticated = false;
   isAdmin = false;
@@ -276,4 +278,8 @@ export class NavbarComponent implements OnInit {
     this.authService.logout();
     this.closeDropdown();
   }
-}
+
+  call():void{
+    this.quizservice.getAvaibleQuizzName();
+  }
+} 
