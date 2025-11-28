@@ -17,15 +17,35 @@ import { QuizService } from '../../../core/services/quiz.service';
         </div>
 
         <div class="nav-menu">
-          <a routerLink="/quizzes/names" routerLinkActive="active" class="nav-link">
+          <!-- Quizzes link ONLY shows when NOT authenticated -->
+          <a *ngIf="!isAuthenticated" routerLink="/quizzes/names" routerLinkActive="active" class="nav-link">
             Quizzes
           </a>
           
-          <a *ngIf="isAdmin" routerLink="/admin/quiz/create" routerLinkActive="active" class="nav-link">
-            Create Quiz
-          </a>
+          <!-- ADMIN MENU: Show when user is admin -->
+          <div *ngIf="isAdmin" class="admin-menu">
+            <button class="admin-button" (click)="toggleAdminMenu()">
+              <span class="admin-icon">⚙️</span>
+              <span class="admin-text">Manage Quizzes</span>
+              <span class="dropdown-arrow">▼</span>
+            </button>
+            
+            <div class="admin-dropdown" *ngIf="showAdminMenu">
+              <a routerLink="/admin/quiz/create" class="dropdown-item" (click)="closeAdminMenu()">
+                ➕ Create New Quiz
+              </a>
+              <a routerLink="/quizzes" class="dropdown-item" (click)="closeAdminMenu()">
+                ✏️ Edit Existing Quiz
+              </a>
+              <div class="dropdown-divider"></div>
+              <a routerLink="/profile/attempts" class="dropdown-item" (click)="closeAdminMenu()">
+                📊 My Attempts
+              </a>
+            </div>
+          </div>
 
-          <a *ngIf="isAuthenticated" routerLink="/profile/attempts" routerLinkActive="active" class="nav-link">
+          <!-- Regular user menu (non-admin) -->
+          <a *ngIf="isAuthenticated && !isAdmin" routerLink="/profile/attempts" routerLinkActive="active" class="nav-link">
             My Attempts
           </a>
 
@@ -38,12 +58,22 @@ import { QuizService } from '../../../core/services/quiz.service';
             <button class="user-button" (click)="toggleDropdown()">
               <span class="user-icon">👤</span>
               <span class="username">{{ username }}</span>
+              <span *ngIf="isAdmin" class="admin-badge">ADMIN</span>
               <span class="dropdown-arrow">▼</span>
             </button>
             
             <div class="dropdown-menu" *ngIf="showDropdown">
+              <div class="dropdown-header">
+                <span>{{ username }}</span>
+                <span *ngIf="isAdmin" class="admin-label">Administrator</span>
+              </div>
+              <div class="dropdown-divider"></div>
               <a routerLink="/profile/attempts" class="dropdown-item" (click)="closeDropdown()">
                 📊 My Attempts
+              </a>
+              <div *ngIf="isAdmin" class="dropdown-divider"></div>
+              <a *ngIf="isAdmin" routerLink="/admin/quiz/create" class="dropdown-item admin-action" (click)="closeDropdown()">
+                ➕ Create Quiz
               </a>
               <div class="dropdown-divider"></div>
               <button class="dropdown-item logout" (click)="logout()">
@@ -113,6 +143,82 @@ import { QuizService } from '../../../core/services/quiz.service';
       background: #f8f9ff;
     }
 
+    /* ADMIN MENU STYLES */
+    .admin-menu {
+      position: relative;
+    }
+
+    .admin-button {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .admin-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .admin-icon {
+      font-size: 18px;
+    }
+
+    .admin-text {
+      font-size: 14px;
+    }
+
+    .admin-dropdown {
+      position: absolute;
+      top: calc(100% + 10px);
+      left: 0;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+      min-width: 220px;
+      overflow: hidden;
+      animation: fadeIn 0.2s ease-out;
+      border: 2px solid #667eea;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .admin-dropdown .dropdown-item {
+      display: block;
+      padding: 12px 20px;
+      color: #333;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+      transition: background 0.2s;
+      font-size: 14px;
+    }
+
+    .admin-dropdown .dropdown-item:hover {
+      background: #f8f9ff;
+      color: #667eea;
+    }
+
+    /* AUTH BUTTONS */
     .auth-buttons {
       display: flex;
       gap: 10px;
@@ -146,6 +252,7 @@ import { QuizService } from '../../../core/services/quiz.service';
       box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
     }
 
+    /* USER MENU */
     .user-menu {
       position: relative;
     }
@@ -154,7 +261,7 @@ import { QuizService } from '../../../core/services/quiz.service';
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: 8px 16px;
+      padding: 8px 12px;
       background: #f8f9ff;
       border: 2px solid #e0e0e0;
       border-radius: 8px;
@@ -173,6 +280,16 @@ import { QuizService } from '../../../core/services/quiz.service';
     .username {
       font-weight: 600;
       color: #333;
+      font-size: 14px;
+    }
+
+    .admin-badge {
+      background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+      color: white;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 10px;
+      font-weight: 700;
     }
 
     .dropdown-arrow {
@@ -187,20 +304,29 @@ import { QuizService } from '../../../core/services/quiz.service';
       background: white;
       border-radius: 8px;
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-      min-width: 200px;
+      min-width: 220px;
       overflow: hidden;
       animation: fadeIn 0.2s ease-out;
     }
 
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(-10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    .dropdown-header {
+      padding: 12px 20px;
+      background: #f8f9ff;
+      border-bottom: 1px solid #e0e0e0;
+      font-weight: 600;
+      color: #333;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .admin-label {
+      background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+      color: white;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 10px;
+      font-weight: 700;
     }
 
     .dropdown-item {
@@ -214,10 +340,21 @@ import { QuizService } from '../../../core/services/quiz.service';
       width: 100%;
       text-align: left;
       transition: background 0.2s;
+      font-size: 14px;
     }
 
     .dropdown-item:hover {
       background: #f8f9ff;
+    }
+
+    .dropdown-item.admin-action {
+      color: #667eea;
+      font-weight: 600;
+    }
+
+    .dropdown-item.admin-action:hover {
+      background: #f8f9ff;
+      color: #764ba2;
     }
 
     .dropdown-item.logout {
@@ -246,6 +383,14 @@ import { QuizService } from '../../../core/services/quiz.service';
       .brand-text {
         display: none;
       }
+
+      .admin-text {
+        display: none;
+      }
+
+      .admin-button {
+        padding: 8px 12px;
+      }
     }
   `]
 })
@@ -257,6 +402,7 @@ export class NavbarComponent implements OnInit {
   isAdmin = false;
   username = '';
   showDropdown = false;
+  showAdminMenu = false;
 
   ngOnInit(): void {
     this.authService.currentUser$.subscribe(username => {
@@ -268,10 +414,20 @@ export class NavbarComponent implements OnInit {
 
   toggleDropdown(): void {
     this.showDropdown = !this.showDropdown;
+    this.showAdminMenu = false; // Close admin menu when opening user menu
   }
 
   closeDropdown(): void {
     this.showDropdown = false;
+  }
+
+  toggleAdminMenu(): void {
+    this.showAdminMenu = !this.showAdminMenu;
+    this.showDropdown = false; // Close user menu when opening admin menu
+  }
+
+  closeAdminMenu(): void {
+    this.showAdminMenu = false;
   }
 
   logout(): void {
@@ -282,4 +438,4 @@ export class NavbarComponent implements OnInit {
   call():void{
     this.quizservice.getAvaibleQuizzName();
   }
-} 
+}

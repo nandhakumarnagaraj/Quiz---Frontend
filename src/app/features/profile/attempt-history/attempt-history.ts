@@ -48,12 +48,7 @@ import { QuizAttemptService } from '../../../core/services/attempt.service';
             </div>
           </div>
 
-          <button 
-            class="btn btn-outline"
-            [routerLink]="['/quizzes/result', attempt.attemptId]"
-          >
-            View Details
-          </button>
+          <!-- View Details button REMOVED -->
         </div>
       </div>
     </div>
@@ -195,12 +190,6 @@ import { QuizAttemptService } from '../../../core/services/attempt.service';
     .btn-primary {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
-    }
-
-    .btn-outline {
-      background: white;
-      border: 2px solid #667eea;
-      color: #667eea;
     }
 
     .btn:hover {
