@@ -37,6 +37,6 @@ export class QuizService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
   getAvaibleQuizzName(): Observable<string[]> {
-    return this.http.get<string[]>(this.apiUrl + "/names");
+    return this.http.get<string[]>(`${this.apiUrl}/names`);
   }
 }

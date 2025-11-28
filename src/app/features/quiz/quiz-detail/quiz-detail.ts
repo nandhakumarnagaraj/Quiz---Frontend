@@ -13,10 +13,40 @@ import { QuizService } from '../../../core/services/quiz.service';
     <div class="detail-container">
       <div *ngIf="isLoading" class="loading">
         <div class="spinner"></div>
-        <p>Loading quiz details...</p>
+        <p>Loading...</p>
       </div>
 
-      <div *ngIf="!isLoading && quiz" class="quiz-detail">
+      <div *ngIf="!isLoading && isNamesList" class="quiz-detail">
+        <div class="detail-header">
+          <div class="header-content">
+            <h1>Available Quiz Names</h1>
+            <div class="quiz-meta">
+              <span class="meta-item">📚 Total Available: {{ quizNames.length }}</span>
+            </div>
+          </div>
+          <div class="header-actions">
+             <button class="btn btn-outline" routerLink="/auth/login">Login to Start</button>
+          </div>
+        </div>
+
+        <div class="questions-preview">
+          <h2>Quiz List</h2>
+          <div class="question-list">
+            <div class="question-item" *ngFor="let name of quizNames; let i = index">
+              <div class="question-header">
+                <span class="question-number">{{ i + 1 }}</span>
+                <h3>{{ name }}</h3>
+              </div>
+            </div>
+            
+            <div *ngIf="quizNames.length === 0" class="empty-state">
+              <p>No quiz names found.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="!isLoading && !isNamesList && quiz" class="quiz-detail">
         <div class="detail-header">
           <div class="header-content">
             <h1>{{ quiz.quizText }}</h1>
@@ -219,6 +249,12 @@ import { QuizService } from '../../../core/services/quiz.service';
       color: #667eea;
       font-size: 20px;
     }
+    
+    .empty-state {
+      text-align: center;
+      color: #666;
+      padding: 20px;
+    }
   `]
 })
 export class QuizDetailComponent implements OnInit {
@@ -227,7 +263,14 @@ export class QuizDetailComponent implements OnInit {
   private quizService = inject(QuizService);
   private authService = inject(AuthService);
 
+  // State for Single Quiz View
   quiz: Quiz | null = null;
+  
+  // State for Quiz Names List View
+  quizNames: string[] = [];
+  isNamesList = false;
+
+  // Shared State
   isLoading = true;
   isAuthenticated = false;
   isAdmin = false;
@@ -236,8 +279,24 @@ export class QuizDetailComponent implements OnInit {
     this.isAuthenticated = this.authService.isAuthenticated();
     this.isAdmin = this.authService.isAdmin();
     
-    const quizId = Number(this.route.snapshot.paramMap.get('id'));
-    this.loadQuiz(quizId);
+    // Check the route parameter 'id'
+    const idParam = this.route.snapshot.paramMap.get('id');
+
+    if (idParam === 'names') {
+      // MODE 1: Names List
+      this.isNamesList = true;
+      this.loadQuizNames();
+    } else {
+      // MODE 2: Single Quiz Detail
+      this.isNamesList = false;
+      const quizId = Number(idParam);
+      if (!isNaN(quizId)) {
+        this.loadQuiz(quizId);
+      } else {
+        // Fallback for invalid IDs
+        this.router.navigate(['/quizzes']);
+      }
+    }
   }
 
   loadQuiz(quizId: number): void {
@@ -249,6 +308,19 @@ export class QuizDetailComponent implements OnInit {
       error: () => {
         this.isLoading = false;
         this.router.navigate(['/quizzes']);
+      }
+    });
+  }
+
+  loadQuizNames(): void {
+    this.quizService.getAvaibleQuizzName().subscribe({
+      next: (names) => {
+        this.quizNames = names;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Failed to load names', err);
+        this.isLoading = false;
       }
     });
   }
