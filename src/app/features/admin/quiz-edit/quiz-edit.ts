@@ -1,11 +1,10 @@
-// src/app/features/admin/quiz-edit/quiz-edit.component.ts
-import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { QuizService } from '../../../core/services/quiz.service';
 import { Quiz } from '../../../shared/models/quiz.model';
 import { ToastrService } from 'ngx-toastr';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Component, inject, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-quiz-edit',
