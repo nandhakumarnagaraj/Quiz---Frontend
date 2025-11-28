@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { QuizCreateComponent } from './quiz-create/quiz-create';
+import { QuizEditComponent } from './quiz-edit/quiz-edit';
 
 
 export const ADMIN_ROUTES: Routes = [

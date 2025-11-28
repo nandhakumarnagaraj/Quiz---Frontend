@@ -2,8 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environments';
-import { Quiz } from '../core/services/quiz';
-import { QuizCreateRequest } from '../../shared/models/quiz.model';
+import { Quiz, QuizCreateRequest } from '../../shared/models/quiz.model';
 
 
 @Injectable({
